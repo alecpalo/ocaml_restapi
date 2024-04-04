@@ -1,0 +1,6 @@
+# dune init proj ocaml_restapi
+# OCAMLPARAM: unset
+# Shared cache: disabled
+# Shared cache location: /Users/alecpalo/.cache/dune/db
+# Workspace root: /Users/alecpalo/Projects/ocaml_restapi
+# Auto-detected concurrency: 8
