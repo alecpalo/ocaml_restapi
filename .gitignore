@@ -1,0 +1,39 @@
+# Dune build folder
+_build/
+
+# Dune configuration
+.dune/
+*.install
+
+# Logs
+*.log
+
+# OCaml bytecode and native binaries
+*.cmi
+*.cmo
+*.cma
+*.cmx
+*.cmxa
+*.cmt
+*.cmti
+*.cmxs
+*.o
+
+# Executables (adjust as necessary)
+*.exe
+*.bin
+
+# OPAM files
+*.opam-switch/
+*.opam.locked
+
+# Merlin configuration
+.merlin
+
+# IDE/Editor specific
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
