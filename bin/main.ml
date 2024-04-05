@@ -13,29 +13,64 @@ class task (title : string) (description : string) (deadline : string) = object
 
   method getDeadline = deadline
   method setDeadline newDeadline = deadline <- newDeadline
+
+  method toJson : Yojson.Safe.t = 
+    `Assoc [
+      ("title", `String title);
+      ("description", `String description);
+      ("deadline", `String deadline)
+    ]
 end;;
 
+let tasks : task list ref = ref [];;
 
-let tasks : task list = [];;
+let taskToJson taskList =
+  `List (List.map (fun t -> t#toJson) taskList)
+;;
 
-let getList _req = 
-  Response.of_plain_text |> Lwt.return
+let removeTask title = 
+  tasks := List.filter(fun t -> t#getTitle <> title) !tasks
+;;
 
-let addTask req =
-    let name = Router.param req "name" in
-    Printf.sprintf "Hello, %s" name |> Response.of_plain_text |> Lwt.return
+let addTask title description deadline =
+  tasks := !tasks @ [new task title description deadline]
+;;
 
-let removeTask req =
-  let task = Router.param req "task" in 
-  let temp = `Assoc [
-    ("deteled", `String task);
+(* get all the tasks *)
+let getTasksHandler _req = 
+  let json = taskToJson !tasks in
+  Response.of_json json |> Lwt.return
+;;
+
+(* add a task to the list *)
+let addTaskHandler req =
+  let body = Request.to_json_exn in
+    
+  
+;;
+
+(* remove one task from your list *)
+let removeTaskHandler req =
+  let title = Router.param req "title" in 
+  removeTask title;
+  let json = `Assoc [
+    ("deteled", `String title);
   ] in
-  Response.of_json temp |> Lwt.return
+  Response.of_json json |> Lwt.return
+;;
+
+(* This is to get one task *)
+let getTaskHanlder req = 
+  let title = Router.param req "title" in
+  Response.of_json (`Assoc [ "message", `String title ]) |> Lwt.return
+;;
 
 let () =
     App.empty
-    |> App.get "/" getList 
-    |> App.get "/add/:name" addTask 
-    |> App.get "/remove/:task" removeTask 
+    |> App.get "/" getTasksHandler 
+    |> App.get "/:title" getTaskHanlder
+    |> App.post "/add" addTaskHandler 
+    |> App.post "/remove" removeTaskHandler 
     |> App.run_command
     |> ignore
+;;
