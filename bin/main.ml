@@ -44,9 +44,9 @@ let getTasksHandler _req =
 
 (* add a task to the list *)
 let addTaskHandler req =
-  let body = Request.to_json_exn in
-    
-  
+  let body = Request.to_json in 
+   
+  Printf.sprintf "Hello, Alec" |> Response.of_plain_text |> Lwt.return 
 ;;
 
 (* remove one task from your list *)
